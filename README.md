@@ -60,8 +60,7 @@ below to download the following files:
 ## Amazon EC2
 Because SFCA has tremendous memory (about 750MB of RAM) and processing requirements, it is not feasible to run it on a client machine, and especially not in a web browser or smartphone. Perhaps the only client-side application that can get away with consuming 750MB+ of RAM is a computer game or scientific computing software where the user anticipates high memory usage.
 
-To address this problem, you will deply SFCA to the cloud - specifically to an Amazon Web Service EC2 compute node. An image of this compute node has already been precompiled and is available for you via... The image is running Amazon Linux (AMI); see 
-https://aws.amazon.com/amazon-linux-ami/ for more details. 
+To address this problem, you will deply SFCA to the cloud - specifically to an Amazon Web Service EC2 compute node. An image of this compute node has already been precompiled and is available for you via... The image is running Amazon Linux (AMI); seehttps://aws.amazon.com/amazon-linux-ami/ for more details. 
 
 You will deploy SFCA as a <b> web application </b>, hosted on your EC2 compute node. You will also need to implement an API that allows a thin client to make http requests to the compute node with an image for SFCA to process. The API should return SFCA's class label. This will let you implement your software on even a resource starved device, e.g. on a web browser (via Javascript) or an Andriod/iOS phone (via Java) without consume the resources of a user's device. The script for demonstrating how to run the trained SFCA model (`find_food.py`) provided in this repo will need to undergo significant modification to achieve these goals. 
 
@@ -123,4 +122,4 @@ Try out some other samples. If you look at the high_school_lunch_room image in t
 
 you'll find that SFCA sees food with scores `[[1.37732399 0.68766689]]`. A relatively close decision on a tricky image -- what do you think is it an image of? The food the students are eating, or the students eating the food? SFCA says the food is the better topic.
 
-You will note that it takes a long time to recognize an image as the code needs to load the pre-trained model into memory (about 750MB!). You will need to figure out how to have he model persist in memory on AWS, such that queries from your application will be much faster. 
+You will note that it takes a long time to recognize an image as the code needs to load the pre-trained model into memory (about 750MB!). You will need to figure out how to have he model persist in memory on AWS, such that queries from your application will be much faster
