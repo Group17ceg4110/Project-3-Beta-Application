@@ -33,4 +33,4 @@ def scan_image(b64string):
 
     #Run the image in the model.
     scores = sess.run(class_scores, {x_input: img_tensor, keep_prob: 1.})
-    return scores
+    return str(scores[0]) + ' ' + str(scores[1])
