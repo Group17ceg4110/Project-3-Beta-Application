@@ -19,9 +19,12 @@ class_scores = graph.get_tensor_by_name("fc8/fc8:0")
 ######
 
 @app.route('/analyze', methods=['GET', 'POST'])
-def login():
+def analyze():
     if request.method == 'POST':
-        return scan_image(request.form['b64image'])
+        ret = "NET: "
+        for img in request.form.getlist('b64image'):
+            ret = ret + scan_image(img) + ' '
+        return ret
 
 
 # Work in RGBA space (A=alpha) since png's come in as RGBA, jpeg come in as RGB
@@ -34,3 +37,7 @@ def scan_image(b64string):
     #Run the image in the model.
     scores = sess.run(class_scores, {x_input: img_tensor, keep_prob: 1.})
     return str(scores[0]) + ' ' + str(scores[1])
+
+if __name__ == "__main__":
+    app.debug = True
+    app.run()

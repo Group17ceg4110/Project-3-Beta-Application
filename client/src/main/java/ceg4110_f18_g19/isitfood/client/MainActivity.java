@@ -3,6 +3,7 @@ package ceg4110_f18_g19.isitfood.client;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +11,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        //Set the URL to connect to according to the value stored in the default preferences file
+        ServerConfiguration.getInstance().setURL(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_url", "18.224.175.235"));
         setContentView(R.layout.activity_main);
         Button imagePicker = findViewById(R.id.selectImageButton);
         imagePicker.setOnClickListener(new View.OnClickListener()
@@ -46,16 +49,14 @@ public class MainActivity extends AppCompatActivity {
             }
             if (uri != null)
             {
-                File file = new File(uri.getPath());
                 try
                 {
-                    FileInputStream stream = new FileInputStream(file);
-                    Intent intent = new Intent(this, ImageViewActivity.class);
-                    intent.putExtra("ceg4110_f18_g19.isitfood.BITMAP", BitmapFactory.decodeFileDescriptor(stream.getFD()));
-                    intent.putExtra("ceg4110_f18_g19.isitfood.RESULT", CommunicationModule.request(file));
-                    startActivity(intent);
+                    InputStream stream = getContentResolver().openInputStream(uri);
+                    ArrayList<InputStream> selection = new ArrayList<>();
+                    selection.add (stream);
+                    ResponseDecoder.decode(this, CommunicationModule.request(CommunicationModule.encode(selection)), BitmapFactory.decodeStream(stream));
                 } catch (Exception e) {
-                    Toast.makeText(this, "Could not open " + file.getPath() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Could not open " + uri.getPath() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
